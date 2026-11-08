@@ -1,432 +1,276 @@
-// ====================================
-// FRUITRATE - JAVASCRIPT
-// ====================================
 
-// CSS automatikus betöltése
-const css = document.createElement("link");
-css.rel = "stylesheet";
-css.href = "style.css";
-document.head.appendChild(css);
+const style = document.createElement("style");
 
-// Alapadatok
-const foods = [
-    { id: "alma", name: "Alma", emoji: "🍎", type: "fruit", rating: 0, count: 0 },
-    { id: "banan", name: "Banán", emoji: "🍌", type: "fruit", rating: 0, count: 0 },
-    { id: "paprika", name: "Paprika", emoji: "🫑", type: "vegetable", rating: 0, count: 0 },
-    { id: "ananasz", name: "Ananász", emoji: "🍍", type: "fruit", rating: 0, count: 0 },
-    { id: "repa", name: "Répa", emoji: "🥕", type: "vegetable", rating: 0, count: 0 },
-    { id: "kukorica", name: "Kukorica", emoji: "🌽", type: "vegetable", rating: 0, count: 0 },
-    { id: "borso", name: "Borsó", emoji: "🫛", type: "vegetable", rating: 0, count: 0 },
-    { id: "eper", name: "Eper", emoji: "🍓", type: "fruit", rating: 0, count: 0 },
-    { id: "szolo", name: "Szőlő", emoji: "🍇", type: "fruit", rating: 0, count: 0 },
-    { id: "dinnye", name: "Görögdinnye", emoji: "🍉", type: "fruit", rating: 0, count: 0 },
-    { id: "barack", name: "Barack", emoji: "🍑", type: "fruit", rating: 0, count: 0 }
-];
-
-// Vicces reakciók
-const reactions = {
-    alma: [
-        "Steve Jobs csalódott benned. 😭",
-        "Az alma most új állást keres.",
-        "Newton most visszafordul a sírjában."
-    ],
-    banan: [
-        "A banán elcsúszott a depresszióban. 😭",
-        "Ez még a majmoknak is fájna.",
-        "A banán most meghámozta a szívét."
-    ],
-    paprika: [
-        "Ez most csípett! 🌶️",
-        "A paprika bosszút forral.",
-        "Még a paprika is elpirult."
-    ],
-    ananasz: [
-        "Az ananász beadta a felmondását.",
-        "Hawaii most szomorú.",
-        "Ez egy gyümölcs elleni támadás!"
-    ],
-    repa: [
-        "A répa nem látja értelmét ennek.",
-        "A répa most szemüveget kér.",
-        "Nyuszi most csalódott benned."
-    ],
-    kukorica: [
-        "Ez elég kukoricázós értékelés volt.",
-        "A kukorica kipattant a dühtől.",
-        "Ez még a pattogatott kukoricának is sok."
-    ],
-    borso: [
-        "A borsó szeme könnybe lábadt.",
-        "Ez egy apró, de fájdalmas értékelés.",
-        "A borsó most elgurult."
-    ],
-    eper: [
-        "Az eper sír a hűtőben. 🍓",
-        "Ez most nagyon epresen fájt.",
-        "Az eper letiltott téged."
-    ],
-    szolo: [
-        "Ez most savanyú lett.",
-        "A szőlő fürtökben hullatja a könnyeit.",
-        "A szőlő most kipréselve érzi magát."
-    ],
-    dinnye: [
-        "A dinnye darabokra tört.",
-        "Ez egy görög tragédia.",
-        "A dinnye most elgurult."
-    ],
-    barack: [
-        "A barack most elpirult.",
-        "Ez egy barackos pofon volt.",
-        "A barack megsértődött."
-    ]
-};
-
-// Adatok betöltése
-const saved = JSON.parse(localStorage.getItem("fruitRate") || "{}");
-
-foods.forEach(food => {
-    if (saved[food.id]) {
-        food.rating = saved[food.id].rating;
-        food.count = saved[food.id].count;
-    }
-});
-
-// Mentés
-function saveData() {
-    const data = {};
-
-    foods.forEach(food => {
-        data[food.id] = {
-            rating: food.rating,
-            count: food.count
-        };
-    });
-
-    localStorage.setItem("fruitRate", JSON.stringify(data));
+style.textContent = `
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f5f2;
+    color: #333;
+    margin: 0;
 }
 
-// HTML létrehozása
-document.body.innerHTML = `
-    <div class="app">
+header {
+    background-color: #47734c;
+    color: white;
+    text-align: center;
+    padding: 30px;
+}
 
-        <header class="navbar">
-            <div class="logo">fruit<span>rate.</span></div>
-            <div class="nav-label">A gyümölcsök és zöldségek világa</div>
-        </header>
+header h1 {
+    margin: 0;
+}
 
-        <section class="hero">
-            <span class="eyebrow">A TE ÍZLÉSED. A TE SZABÁLYAID.</span>
+header p {
+    margin-bottom: 0;
+}
 
-            <h1>Mennyire jók<br>ezek az ételek?</h1>
+main {
+    width: 85%;
+    max-width: 1000px;
+    margin: 30px auto;
+}
 
-            <p>
-                Értékeld a kedvenc gyümölcseidet és zöldségeidet.
-                De vigyázz, az őszinteség néha fáj! 
-            </p>
+h2 {
+    color: #47734c;
+    margin-bottom: 20px;
+}
 
-            <a href="#foods" class="hero-button">
-                Kezdjük az értékelést ↓
-            </a>
-        </section>
+.foods {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
 
-        <section class="stats">
-            <div class="stat">
-                <strong id="totalFoods">11</strong>
-                <span>Értékelhető étel</span>
-            </div>
+.food {
+    background-color: white;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+}
 
-            <div class="stat">
-                <strong id="ratedFoods">0</strong>
-                <span>Értékelt étel</span>
-            </div>
+.food h3 {
+    font-size: 22px;
+    margin: 10px;
+}
 
-            <div class="stat">
-                <strong id="totalVotes">0</strong>
-                <span>Összes szavazat</span>
-            </div>
-        </section>
+.food select {
+    padding: 8px;
+    margin: 10px;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+}
 
-        <main id="foods">
+.food button {
+    background-color: #47734c;
+    color: white;
+    border: none;
+    padding: 9px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
 
-            <div class="section-heading">
-                <div>
-                    <span class="eyebrow">VÁLASZD KI A KEDVENCED</span>
-                    <h2>Értékelések</h2>
-                </div>
+.food button:hover {
+    background-color: #345a39;
+}
 
-                <input
-                    type="search"
-                    id="search"
-                    placeholder="Keresés..."
-                >
-            </div>
+.result {
+    margin-top: 12px;
+    color: #47734c;
+    font-weight: bold;
+}
 
-            <div class="filters">
-                <button class="filter active" data-filter="all">
-                    Összes
-                </button>
+.message {
+    margin-top: 8px;
+    font-size: 14px;
+}
 
-                <button class="filter" data-filter="fruit">
-                    🍓 Gyümölcsök
-                </button>
+@media (max-width: 600px) {
+    .foods {
+        grid-template-columns: 1fr;
+    }
 
-                <button class="filter" data-filter="vegetable">
-                    🥕 Zöldségek
-                </button>
-            </div>
-
-            <div class="food-grid" id="foodGrid"></div>
-
-        </main>
-
-        <section class="leaderboard">
-            <span class="eyebrow">A NAGY RANGLISTA</span>
-            <h2>Legjobbak és legrosszabbak</h2>
-
-            <div class="ranking-grid">
-                <div class="ranking-card">
-                    <h3>🏆 Legjobb ételek</h3>
-                    <div id="bestFoods"></div>
-                </div>
-
-                <div class="ranking-card">
-                    <h3>💀 Legrosszabb ételek</h3>
-                    <div id="worstFoods"></div>
-                </div>
-            </div>
-        </section>
-
-        <footer>
-            <div class="logo">fruit<span>rate.</span></div>
-            <p>Minden gyümölcs megérdemel egy esélyt. 🍉</p>
-            <span>© 2026 FruitRate</span>
-        </footer>
-
-    </div>
-
-    <div class="toast" id="toast"></div>
+    main {
+        width: 92%;
+    }
+}
 `;
 
-// Értékelő kártyák megjelenítése
-function renderFoods(filter = "all", search = "") {
+document.head.appendChild(style);
 
-    const grid = document.getElementById("foodGrid");
+const foods = [
+    { name: "Alma", emoji: "🍎", sum: 0, count: 0 },
+    { name: "Mandarin", emoji: "🍊", sum: 0, count: 0 },
+    { name: "Körte", emoji: "🍐", sum: 0, count: 0 },
+    { name: "Banán", emoji: "🍌", sum: 0, count: 0 },
+    { name: "Eper", emoji: "🍓", sum: 0, count: 0 },
+    { name: "Paprika", emoji: "🫑", sum: 0, count: 0 },
+    { name: "Kukorica", emoji: "🌽", sum: 0, count: 0 },
+    { name: "Borsó", emoji: "🫛", sum: 0, count: 0 },
+    { name: "Paradicsom", emoji: "🍅", sum: 0, count: 0 },
+    { name: "Répa", emoji: "🥕", sum: 0, count: 0 }
+];
 
-    const filtered = foods.filter(food => {
-        const matchesType =
-            filter === "all" || food.type === filter;
+document.body.innerHTML = `
+    <header>
+        <h1>Rate the Food</h1>
+        <p>Értékeld a gyümölcsöket és zöldségeket!</p>
+    </header>
 
-        const matchesSearch =
-            food.name.toLowerCase().includes(search.toLowerCase());
+    <main>
+        <h2>Értékelhető ételek:</h2>
+        <div class="foods" id="foods"></div>
+    </main>
+`;
 
-        return matchesType && matchesSearch;
-    });
+let html = "";
 
-    grid.innerHTML = filtered.map(food => {
+for (let i = 0; i < foods.length; i++) {
+    html += `
+        <div class="food">
+            <h3>${foods[i].emoji} ${foods[i].name}</h3>
 
-        const average = food.count > 0
-            ? (food.rating / food.count).toFixed(1)
-            : "–";
+            <select id="rating${i}">
+                <option value="1">1 - Nagyon rossz</option>
+                <option value="2">2 - Rossz</option>
+                <option value="3" selected>3 - Közepes</option>
+                <option value="4">4 - Jó</option>
+                <option value="5">5 - Kiváló</option>
+            </select>
 
-        return `
-            <article class="food-card">
+            <button onclick="rateFood(${i})">Értékelés</button>
 
-                <div class="food-image">
-                    <span>${food.emoji}</span>
-                    <span class="food-type">
-                        ${food.type === "fruit" ? "Gyümölcs" : "Zöldség"}
-                    </span>
-                </div>
-
-                <div class="food-content">
-
-                    <div class="food-title">
-                        <h3>${food.name}</h3>
-                        <span class="average">${average}/10</span>
-                    </div>
-
-                    <p class="votes">
-                        ${food.count} értékelés
-                    </p>
-
-                    <label for="rating-${food.id}">
-                        Saját értékelés
-                    </label>
-
-                    <div class="rating-value">
-                        <strong id="value-${food.id}">8</strong>
-                        <span>/ 10</span>
-                    </div>
-
-                    <input
-                        type="range"
-                        id="rating-${food.id}"
-                        min="1"
-                        max="10"
-                        value="8"
-                        class="rating-slider"
-                        data-id="${food.id}"
-                    >
-
-                    <button
-                        class="rate-button"
-                        data-id="${food.id}"
-                    >
-                        Értékelés elküldése
-                    </button>
-
-                </div>
-
-            </article>
-        `;
-    }).join("");
-
-    updateStats();
-    updateRanking();
+            <div class="result" id="result${i}"></div>
+            <div class="message" id="message${i}"></div>
+        </div>
+    `;
 }
 
-// Értékelés elküldése
-function rateFood(id) {
+document.getElementById("foods").innerHTML = html;
 
-    const food = foods.find(item => item.id === id);
+function rateFood(index) {
+    let rating = Number(document.getElementById("rating" + index).value);
 
-    const slider = document.getElementById(`rating-${id}`);
+    foods[index].sum += rating;
+    foods[index].count++;
 
-    const rating = Number(slider.value);
+    let average = foods[index].sum / foods[index].count;
 
-    food.rating += rating;
-    food.count++;
+    document.getElementById("result" + index).innerHTML =
+        "Átlagos értékelés: " + average.toFixed(1) + " / 5";
 
-    saveData();
+    let message = "";
 
-    const messages = reactions[id];
-
-    let message;
-
-    if (rating <= 3) {
-        message = messages[Math.floor(Math.random() * messages.length)];
-    } else if (rating <= 6) {
-        message = "Hát... ez nem volt túl meggyőző. 😅";
-    } else if (rating <= 8) {
-        message = "Ez már egy korrekt értékelés! ❤️";
-    } else {
-        message = "EZ AZ! " + food.name + " imád téged! 🏆";
-    }
-
-    showToast(`${food.emoji} ${message}`);
-
-    renderFoods(
-        document.querySelector(".filter.active").dataset.filter,
-        document.getElementById("search").value
-    );
-}
-
-// Statisztikák
-function updateStats() {
-
-    const rated = foods.filter(food => food.count > 0).length;
-
-    const votes = foods.reduce(
-        (sum, food) => sum + food.count, 0
-    );
-
-    document.getElementById("totalFoods").textContent = foods.length;
-    document.getElementById("ratedFoods").textContent = rated;
-    document.getElementById("totalVotes").textContent = votes;
-}
-
-// Ranglista
-function updateRanking() {
-
-    const rated = foods
-        .filter(food => food.count > 0)
-        .map(food => ({
-            ...food,
-            average: food.rating / food.count
-        }))
-        .sort((a, b) => b.average - a.average);
-
-    const best = rated.slice(0, 3);
-    const worst = [...rated].reverse().slice(0, 3);
-
-    function createRanking(items) {
-        if (items.length === 0) {
-            return "<p class='empty'>Még nincs értékelés.</p>";
+    if (index == 0) {
+        if (rating == 1) {
+            message = "Hot take";
         }
-
-        return items.map((food, index) => `
-            <div class="ranking-item">
-                <span>${index + 1}.</span>
-                <span class="rank-emoji">${food.emoji}</span>
-                <strong>${food.name}</strong>
-                <span class="rank-score">
-                    ${food.average.toFixed(1)}/10
-                </span>
-            </div>
-        `).join("");
+        else if (rating == 5) {
+            message = "Based";
+        }
+        else {
+            message = "Lehet basic, de mindig consistent.";
+        }
+    }
+    else if (index == 1) {
+        if (rating == 1) {
+            message = "NAGYON NAGYON DURVA HOT TAKE!";
+        }
+        else if (rating == 5) {
+            message = "DESERVED";
+        }
+        else {
+            message = "Szegény mandarin mindig underrated marad :(";
+        }
+    }
+    else if (index == 2) {
+        if (rating == 1) {
+            message = "Érthető";
+        }
+        else if (rating == 5) {
+            message = "Niche pick";
+        }
+        else {
+            message = "Valid";
+        }
+    }
+    else if (index == 3) {
+        if (rating == 1) {
+            message = "Csak akkor ha nem érett meg normálisan.";
+        }
+        else if (rating == 5) {
+            message = "Top 3ban fix benne van";
+        }
+        else {
+            message = "A banán vagy a legeslegjobb, vagy borzalmas, egy közepes értékeléssel sohasem lehet téveszteni.";
+        }
+    }
+    else if (index == 4) {
+        if (rating == 1) {
+            message = ":(";
+        }
+        else if (rating == 5) {
+            message = "VALIIID";
+        }
+        else {
+            message = "Az eper azért még mindig finom!";
+        }
+    }
+    else if (index == 5) {
+        if (rating == 1) {
+            message = "HOLY HOT TAKE";
+        }
+        else if (rating == 5) {
+            message = "Top listás zöldség.";
+        }
+        else {
+            message = "Nah";
+        }
+    }
+    else if (index == 6) {
+        if (rating == 1) {
+            message = "Biztosan félre kattintottak.";
+        }
+        else if (rating == 5) {
+            message = "NAGYON NAGYON VALIIIIID";
+        }
+        else {
+            message = ":)";
+        }
+    }
+    else if (index == 7) {
+        if (rating == 1) {
+            message = "Understandable";
+        }
+        else if (rating == 5) {
+            message = "Niche";
+        }
+        else {
+            message = "Apró, de azért egész jó!";
+        }
+    }
+    else if (index == 8) {
+        if (rating == 1) {
+            message = "Erre nem is lehetne más értékelést adni.";
+        }
+        else if (rating == 5) {
+            message = "Sohasem lehet semmisem annyira jó, mint amennyira rossz a paradicsom, a legrosszabb dolog ami valaha történt ezzel a viláágal az az hogy felfedeztük ezt az ördögöktől származó borzalmat amit paradicsomnak nevezünk, mellesleg annyira utaállja mindenki hogy se a zöldségek, se a gyümölcsok sem akarják maguk közé venni.";
+        }
+        else {
+            message = "CSAK a paradicsom szoszok az ehető dolgok, minden másnak ami paradicsomhoz kötődik mennie kell.";
+        }
+    }
+    else if (index == 9) {
+        if (rating == 1) {
+            message = "Engem sem tanított meg fütyülni :(";
+        }
+        else if (rating == 5) {
+            message = "VAlID";
+        }
+        else {
+            message = "Overhated";
+        }
     }
 
-    document.getElementById("bestFoods").innerHTML =
-        createRanking(best);
-
-    document.getElementById("worstFoods").innerHTML =
-        createRanking(worst);
+    document.getElementById("message" + index).innerHTML = message;
 }
-
-// Üzenet megjelenítése
-function showToast(message) {
-
-    const toast = document.getElementById("toast");
-
-    toast.textContent = message;
-    toast.classList.add("show");
-
-    setTimeout(() => {
-        toast.classList.remove("show");
-    }, 3000);
-}
-
-// Eseménykezelés
-document.addEventListener("input", event => {
-
-    if (event.target.classList.contains("rating-slider")) {
-
-        const id = event.target.dataset.id;
-
-        document.getElementById(`value-${id}`).textContent =
-            event.target.value;
-    }
-
-    if (event.target.id === "search") {
-
-        const activeFilter =
-            document.querySelector(".filter.active").dataset.filter;
-
-        renderFoods(activeFilter, event.target.value);
-    }
-});
-
-document.addEventListener("click", event => {
-
-    if (event.target.classList.contains("rate-button")) {
-        rateFood(event.target.dataset.id);
-    }
-
-    if (event.target.classList.contains("filter")) {
-
-        document.querySelectorAll(".filter").forEach(button => {
-            button.classList.remove("active");
-        });
-
-        event.target.classList.add("active");
-
-        renderFoods(
-            event.target.dataset.filter,
-            document.getElementById("search").value
-        );
-    }
-});
-
-// Indítás
-renderFoods();
